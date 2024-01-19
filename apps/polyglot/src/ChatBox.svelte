@@ -3,9 +3,11 @@
 	import MessageList from './MessageList.svelte';
 	import LanguageSelection from './LanguageSelection.svelte';
 	import MessageComposer from './MessageComposer.svelte';
+	import LoadingIndicator from './LoadingIndicator.svelte';
 
 	let language = 'fr';
 	let messages: { text: string; sender: string }[] = [];
+	let isLoading = false;
 
 	function handleSend(event: CustomEvent<{ text: string }>) {
 		const message = event.detail.text;
@@ -23,6 +25,7 @@
 	}
 
 	async function translate(text: string, language: string) {
+		isLoading = true;
 		const response = await fetch('/translate', {
 			method: 'POST',
 			headers: {
@@ -34,12 +37,14 @@
 		const responseJson = await response.json();
 
 		messages = [...messages, { sender: 'received', text: responseJson.translatedText }];
+		isLoading = false;
 	}
 </script>
 
 <div class="translation-container">
 	<InstructionPanel />
 	<MessageList {messages} />
+	<LoadingIndicator {isLoading} />
 	<MessageComposer on:send={handleSend} />
 	<LanguageSelection on:language-select={handleLanguageSelect} />
 </div>

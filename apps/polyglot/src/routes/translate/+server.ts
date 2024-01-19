@@ -1,5 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { OpenAI } from 'openai';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export async function POST({ request }) {
 	const { language, text } = await request.json();
