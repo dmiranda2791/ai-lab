@@ -34,6 +34,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-vercel": "^5.1.0",
+		"dotenv": "^16.3.2",
 		"openai": "^4.24.7"
 	}
 }
