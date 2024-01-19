@@ -1,5 +1,5 @@
 {
-  "name": "ai",
+  "name": "ai-labs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,8 +8,7 @@
     "apps/*"
   ],
   "scripts": {
-    "polyglot dev": "npm run dev -w polyglot",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "polyglot dev": "npm run dev -w polyglot"
   },
   "author": "",
   "license": "ISC",
