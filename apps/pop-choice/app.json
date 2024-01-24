@@ -1,4 +1,5 @@
 {
+  "scheme": "myapp",
   "expo": {
     "name": "pop-choice",
     "slug": "pop-choice",
@@ -22,7 +23,9 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": ["expo-router"]
   }
 }

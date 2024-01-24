@@ -1,7 +1,6 @@
-import { Header } from "../components/Header";
 import { QuestionsForm } from "../components/QuestionsForm";
 
-export const QuestionsScreen = () => {
+export default function QuestionsScreen() {
   const questions = [
     {
       id: 1,
@@ -19,10 +18,5 @@ export const QuestionsScreen = () => {
       text: "Do you wanna have fun or do you want something serious?",
     },
   ];
-  return (
-    <>
-      <Header />
-      <QuestionsForm questions={questions} buttonText="Let's go!" />
-    </>
-  );
-};
+  return <QuestionsForm questions={questions} buttonText="Let's go!" />;
+}
