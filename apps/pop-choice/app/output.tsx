@@ -8,7 +8,7 @@ export default function Output() {
       <Text style={styles.description}>
         A fun and stupid movie about a wannabe rocker turned fraud substitute
         teacher forming a rock band with his students to win the Battle of the
-        Bands
+        Bands.
       </Text>
       <Button style={styles.button} text="Go again!" />
     </View>
