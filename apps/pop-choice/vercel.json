@@ -11,7 +11,7 @@
     }
   ],
   "functions": {
-    "api/index.js": {
+    "api/index.ts": {
       "runtime": "@vercel/node@3.0.11",
       "includeFiles": "dist/server/**"
     }
