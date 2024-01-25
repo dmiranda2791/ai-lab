@@ -1,4 +1,6 @@
+import { useForm, Control } from "react-hook-form";
 import { QuestionsForm } from "../components/QuestionsForm";
+import { router } from "expo-router";
 
 export default function QuestionsScreen() {
   const questions = [
@@ -18,5 +20,23 @@ export default function QuestionsScreen() {
       text: "Do you wanna have fun or do you want something serious?",
     },
   ];
-  return <QuestionsForm questions={questions} buttonText="Let's go!" />;
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    const response = await fetch("/suggestion", { method: "POST", body: data });
+    router.push({ pathname: "/output", params: data });
+  };
+  return (
+    <QuestionsForm
+      control={control}
+      onSubmit={handleSubmit(onSubmit)}
+      questions={questions}
+      buttonText="Let's go!"
+    />
+  );
 }

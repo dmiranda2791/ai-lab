@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Control, useForm } from "react-hook-form";
 import { View, StyleSheet } from "react-native";
 import { Question } from "./Question";
 import { Button } from "./Button";
@@ -12,31 +12,21 @@ type Question = {
 type QuestionFormProps = {
   questions: Question[];
   buttonText: string;
+  control: Control<any>;
+  onSubmit: (data: any) => void;
 };
 export const QuestionsForm: React.FC<QuestionFormProps> = ({
   questions,
   buttonText,
+  control,
+  onSubmit,
 }) => {
-  const {
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data);
-  };
-
   return (
     <View style={styles.container}>
       {questions.map((question) => (
         <Question key={question.id} control={control} question={question} />
       ))}
-      <Button
-        style={styles.button}
-        text={buttonText}
-        onPress={handleSubmit(onSubmit)}
-      />
+      <Button style={styles.button} text={buttonText} onPress={onSubmit} />
     </View>
   );
 };
