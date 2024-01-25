@@ -1,27 +1,23 @@
-import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Controller, useFormContext } from "react-hook-form";
+import { View, StyleSheet, TextInput as RNTextInput, Text } from "react-native";
 
-type Question = {
-  id: number;
+type TextInputProps = {
+  label: string;
   name: string;
-  text: string;
-};
-type QuestionProps = {
-  question: Question;
 };
 
-export const Question: React.FC<QuestionProps> = ({ question }) => {
+export const TextInput: React.FC<TextInputProps> = ({ label, name }) => {
   const { control } = useFormContext();
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{question.text}</Text>
+      <Text style={styles.label}>{label}</Text>
       <Controller
         control={control}
         rules={{
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
+          <RNTextInput
             style={styles.input}
             multiline={true}
             numberOfLines={4}
@@ -31,7 +27,7 @@ export const Question: React.FC<QuestionProps> = ({ question }) => {
             value={value}
           />
         )}
-        name={question.name}
+        name={name}
       />
     </View>
   );

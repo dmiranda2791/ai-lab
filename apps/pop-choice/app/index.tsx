@@ -21,20 +21,14 @@ export default function QuestionsScreen() {
     },
   ];
 
-  const {
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm();
-
   const onSubmit = async (data) => {
     const response = await fetch("/suggestion", { method: "POST", body: data });
     router.push({ pathname: "/output", params: data });
   };
+
   return (
     <QuestionsForm
-      control={control}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={onSubmit}
       questions={questions}
       buttonText="Let's go!"
     />
