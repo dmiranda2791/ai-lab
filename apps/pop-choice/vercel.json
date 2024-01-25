@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run export:web",
+  "buildCommand": "npm run expo:export:web",
   "outputDirectory": "dist",
   "devCommand": "expo",
   "cleanUrls": true,
