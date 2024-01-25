@@ -6,8 +6,15 @@ This repository serves as a lab for AI projects. It is designed to showcase vari
 
 ## Table of Contents
 
+- [Installation](#installation)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Installation
+
+```
+  npm install 
+```
 
 ## Contributing
 

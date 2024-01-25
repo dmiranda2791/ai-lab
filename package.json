@@ -8,6 +8,12 @@
     "apps/*"
   ],
   "scripts": {
+    "clean": "npm run clean:modules && npm run clean:dist && npm run clean:expo && npm run clean:svelte-kit",
+    "clean:expo": "find . -name '.expo' -type d -prune -print -exec rm -rf '{}' \\;",
+    "clean:svelte-kit": "find . -name '.svelte-kit' -type d -prune -print -exec rm -rf '{}' \\;",
+    "clean:vercel": "find . -name '.vercel' -type d -prune -print -exec rm -rf '{}' \\;",
+    "clean:dist": "find . -name 'dist' -type d -prune -print -exec rm -rf '{}' \\;",
+    "clean:modules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \\;",
     "polyglot dev": "npm run dev -w polyglot"
   },
   "author": "",
