@@ -3,5 +3,11 @@
   "outputDirectory": "dist",
   "devCommand": "npm run web",
   "cleanUrls": true,
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/"
+    }
+  ]
 }
