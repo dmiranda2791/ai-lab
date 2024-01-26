@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run expo:export:web",
-  "outputDirectory": "apps/pop-choice/dist/client",
+  "outputDirectory": "dist/client",
   "devCommand": "npm run web",
   "functions": {
     "api/index.js": {
