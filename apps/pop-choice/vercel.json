@@ -2,8 +2,6 @@
   "buildCommand": "npm run expo:export:web",
   "outputDirectory": "dist/client",
   "devCommand": "npm run web",
-  "cleanUrls": true,
-  "framework": null,
   "functions": {
     "api/index.js": {
       "runtime": "@vercel/node@3.0.11",
