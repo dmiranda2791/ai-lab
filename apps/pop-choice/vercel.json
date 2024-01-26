@@ -3,11 +3,5 @@
   "outputDirectory": "dist",
   "devCommand": "npm run web",
   "cleanUrls": true,
-  "framework": null,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/index.ts"
-    }
-  ]
+  "framework": null
 }
