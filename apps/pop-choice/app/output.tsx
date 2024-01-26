@@ -1,16 +1,22 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "../components/Button";
+import { Link, useLocalSearchParams } from "expo-router";
 
 export default function Output() {
+  const params = useLocalSearchParams();
+  const { title, year, message: description } = params;
   return (
     <View style={styles.view}>
-      <Text style={styles.title}>School of Rock (2009)</Text>
-      <Text style={styles.description}>
-        A fun and stupid movie about a wannabe rocker turned fraud substitute
-        teacher forming a rock band with his students to win the Battle of the
-        Bands.
-      </Text>
-      <Button style={styles.button} text="Go again!" />
+      <Text style={styles.title}>{`${title} (${year})`}</Text>
+      <Text style={styles.description}>{description}</Text>
+
+      <Link
+        href={{
+          pathname: "/",
+        }}
+      >
+        <Button style={styles.button} text="Go again!" />
+      </Link>
     </View>
   );
 }
