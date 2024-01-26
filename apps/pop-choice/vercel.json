@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run expo:export:web",
   "outputDirectory": "dist",
-  "devCommand": "expo",
+  "devCommand": "npm run web",
   "cleanUrls": true,
   "framework": null,
   "rewrites": [
@@ -9,11 +9,5 @@
       "source": "/(.*)",
       "destination": "/api/index.ts"
     }
-  ],
-  "functions": {
-    "api/index.ts": {
-      "runtime": "@vercel/node@3.0.11",
-      "includeFiles": "dist/server/**"
-    }
-  }
+  ]
 }
