@@ -7,7 +7,7 @@
     "android": "EXPO_USE_METRO_WORKSPACE_ROOT=1 expo start --android",
     "ios": "EXPO_USE_METRO_WORKSPACE_ROOT=1 expo start --ios",
     "web": "EXPO_USE_METRO_WORKSPACE_ROOT=1 expo start --web",
-    "expo:export:web": "expo export -p web",
+    "expo:export:web": "EXPO_DEBUG=true expo export -p web",
     "vercel-build": "expo export -p web",
     "ts:check": "tsc"
   },
