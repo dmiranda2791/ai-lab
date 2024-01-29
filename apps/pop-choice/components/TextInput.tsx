@@ -2,15 +2,20 @@ import { Controller, useFormContext } from "react-hook-form";
 import { View, StyleSheet, TextInput as RNTextInput, Text } from "react-native";
 
 type TextInputProps = {
-  label: string;
+  label?: string;
   name: string;
+  placeholder?: string;
 };
 
-export const TextInput: React.FC<TextInputProps> = ({ label, name }) => {
+export const TextInput: React.FC<TextInputProps> = ({
+  label,
+  name,
+  placeholder,
+}) => {
   const { control } = useFormContext();
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      {label ? <Text style={styles.label}>{label}</Text> : null}
       <Controller
         control={control}
         rules={{
@@ -21,10 +26,11 @@ export const TextInput: React.FC<TextInputProps> = ({ label, name }) => {
             style={styles.input}
             multiline={true}
             numberOfLines={4}
-            placeholder=""
+            placeholder={placeholder}
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
+            placeholderTextColor={"#000C36"}
           />
         )}
         name={name}

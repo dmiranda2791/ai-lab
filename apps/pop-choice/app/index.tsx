@@ -1,52 +1,28 @@
-import { useForm, Control } from "react-hook-form";
-import { QuestionsForm } from "../components/QuestionsForm";
+import { FormProvider, useForm } from "react-hook-form";
 import { router } from "expo-router";
+import { Button } from "../components/Button";
+import { TextInput } from "../components/TextInput";
 
-export default function QuestionsScreen() {
-  const questions = [
-    {
-      id: 1,
-      name: "favoriteMovie",
-      text: "What's your favorite movie and why?",
-    },
-    {
-      id: 2,
-      name: "newOrClassic",
-      text: "Are you in the mood for something new or a classic?",
-    },
-    {
-      id: 3,
-      name: "funOrSerious",
-      text: "Do you wanna have fun or do you want something serious?",
-    },
-  ];
+export default function StartView() {
+  const formMethods = useForm();
 
-  const onSubmit = async (input) => {
-    const data = Object.keys(input).map((key) => {
-      const question = questions.find((question) => question.name === key);
-      return {
-        text: question.text,
-        answer: input[key],
-      };
+  const { handleSubmit } = formMethods;
+
+  const onSubmit = ({ numberOfPeople, timeAvailable }) => {
+    router.push({
+      pathname: "/questions",
+      params: { numberOfPeople, timeAvailable },
     });
-
-    const response = await fetch("/suggestion", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const json = await response.json();
-
-    router.push({ pathname: "/output", params: json });
   };
 
   return (
-    <QuestionsForm
-      onSubmit={onSubmit}
-      questions={questions}
-      buttonText="Let's go!"
-    />
+    <FormProvider {...formMethods}>
+      <TextInput name="numberOfPeople" placeholder="How many people?" />
+      <TextInput
+        name="timeAvailable"
+        placeholder="How much time do you have?"
+      />
+      <Button text="Start" onPress={handleSubmit(onSubmit)} />
+    </FormProvider>
   );
 }
