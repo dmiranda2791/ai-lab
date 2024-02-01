@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignContent: "center",
     alignItems: "center",
-    maxWidth: 500,
   },
   title: {
     color: "#FFFFFF",
