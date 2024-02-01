@@ -6,12 +6,12 @@ import { ControlledTextInput } from "./ControlledTextInput";
 import { ControlledMultiSelectInput } from "./ControlledMultiSelectInput";
 import { useEffect, useState } from "react";
 import { useHeaderTitle } from "./HeaderContext";
+import { router } from "expo-router";
 
 type DynamicFormProps = {
   inputs: Input[];
   numberOfPeople: number;
   buttonText: string;
-  onSubmit: (data: any) => void;
 };
 
 type FormData = {
@@ -26,7 +26,6 @@ type FormData = {
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({
   inputs,
-  buttonText,
   numberOfPeople,
 }) => {
   const { setHeaderTitle } = useHeaderTitle();
@@ -50,29 +49,29 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     if (currentParticipantIndex < numberOfPeople) {
       setHeaderTitle(`${currentParticipantIndex + 1}`);
     } else {
-      setHeaderTitle(); // No argument passed, default to "PopChoice"
+      setHeaderTitle();
     }
   }, [currentParticipantIndex, numberOfPeople, setHeaderTitle]);
 
-  const onSubmit = (data) => {
-    console.log(data.participants[currentParticipantIndex]);
-
-    // Check if we need to add another participant form or submit the final data
+  const onSubmit = async (data) => {
     if (currentParticipantIndex + 1 < numberOfPeople) {
       setCurrentParticipantIndex(currentParticipantIndex + 1);
       append(defaultValues);
     } else {
       setHeaderTitle();
-      // Here you can handle the final submission of all participants' data
-      console.log("All participants:", data.participants);
+
+      const response = await fetch("/suggestion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data }),
+      });
+      const json = await response.json();
+
+      router.push({ pathname: "/output", params: json });
     }
   };
-
-  console.log({
-    currentParticipantIndex,
-    numberOfPeople,
-    fields: fields.length,
-  });
 
   return (
     <FormProvider {...formMethods}>

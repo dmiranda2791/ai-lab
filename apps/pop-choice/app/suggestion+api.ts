@@ -40,17 +40,6 @@ const movies = `
   Chronicling the journey of a writer's renowned fictional tale, 'Asteroid City' unveils the transformation of a mourning father. He takes his technology-fixated family to the quaint Asteroid City for a junior stargazing competition. But there, his perspective on life is irrevocably changed. Wes Anderson directed the comedic drama Asteroid City, starring Jason Schwartzman, Scarlett Johansson, and Tom Hanks.
 `;
 
-type Question = {
-  text: string;
-  answer: string;
-};
-
-type Input = {
-  favoriteMovies: string;
-  newOrClassic: string;
-  funOrSerious: string;
-}
-
 class MovieExpert {
   constructor(private openai: OpenAI, private supabase: SupabaseClient) { }
 
@@ -86,11 +75,12 @@ class MovieExpert {
 
 
   async getChatCompletion(context: string, query: string): Promise<{ title: string; year: string; message: string }> {
+    console.log({ context, query })
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4',
       messages: [{
         role: 'system',
-        content: `You are an enthusiastic movie expert who loves recommending movies to people. You will be given two pieces of information - some context about movies and a question. Your main job is to formulate a short answer to the question using your the provided context. If cannot find the answer in the context, say, "Sorry, I couldn't find the answer in the context." and respond based on you knwoledge. Respond as if you are talking to a friend. Output a JSON object with structure { title, year, message }.`
+        content: `You are an enthusiastic movie expert who loves recommending movies to people. You will be given two pieces of information - some context about a group of people and their movie preferences and some movies that fit those preferences. Your main job is to formulate a short message using the provided context. If cannot find the answer in the context, say, "Sorry, I couldn't find the answer in the context." and respond based on you knwoledge. Respond as if you are talking to a group of friends. Output a JSON object with structure { title, year, message }.`
       }, {
         role: 'user',
         content: `Context: ${context} Question: ${query}`
@@ -98,7 +88,10 @@ class MovieExpert {
       temperature: 0.5,
       frequency_penalty: 0.5
     });
-    return JSON.parse(response.choices[0].message.content)
+
+    const messageContent = response.choices[0].message.content;
+    console.log({ messageContent })
+    return JSON.parse(messageContent)
   }
 }
 
@@ -107,6 +100,16 @@ const config = {
     url: process.env.SUPABASE_URL,
     privateKey: process.env.SUPABASE_API_KEY
   },
+}
+
+interface InputData {
+  favoriteMovie: string;
+  mood: string[];
+  famousPerson: string;
+}
+
+interface Input {
+  data: InputData[]
 }
 
 export async function POST(request: ExpoRequest) {

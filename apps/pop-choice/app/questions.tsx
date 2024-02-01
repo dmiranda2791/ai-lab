@@ -1,5 +1,5 @@
 import { DynamicForm } from "../components/DynamicForm";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { Input } from "../models/input";
 
 const inputs: Input[] = [
@@ -38,33 +38,11 @@ type RouteParams = {
 };
 
 export default function QuestionsScreen() {
-  const { numberOfPeople, timeAvailable } = useLocalSearchParams<RouteParams>();
-
-  const onSubmit = async (input) => {
-    const data = Object.keys(input).map((key) => {
-      const question = inputs.find((question) => question.name === key);
-      return {
-        text: question.label,
-        answer: input[key],
-      };
-    });
-
-    const response = await fetch("/suggestion", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const json = await response.json();
-
-    router.push({ pathname: "/output", params: json });
-  };
+  const { numberOfPeople } = useLocalSearchParams<RouteParams>();
 
   return (
     <DynamicForm
       numberOfPeople={Number(numberOfPeople)}
-      onSubmit={onSubmit}
       inputs={inputs}
       buttonText="Let's go!"
     />
