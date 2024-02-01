@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet } from "react-native";
 import { Icon } from "./Icon";
+import { useHeaderTitle } from "./HeaderContext";
 
 export const Header: React.FC = () => {
+  const { headerTitle } = useHeaderTitle();
   return (
     <View style={styles.view}>
       <Icon />
-      <Text style={styles.text}>PopChoice</Text>
+      <Text style={styles.text}>{headerTitle}</Text>
     </View>
   );
 };

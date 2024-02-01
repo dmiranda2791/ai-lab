@@ -1,20 +1,19 @@
 import { View, StyleSheet, TextInput, Text } from "react-native";
 import { Controller, useFormContext } from "react-hook-form";
 
-type Question = {
-  id: number;
+type ControlledTextInputProps = {
+  label: string;
   name: string;
-  text: string;
-};
-type QuestionProps = {
-  question: Question;
 };
 
-export const Question: React.FC<QuestionProps> = ({ question }) => {
+export const ControlledTextInput: React.FC<ControlledTextInputProps> = ({
+  label,
+  name,
+}) => {
   const { control } = useFormContext();
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{question.text}</Text>
+      <Text style={styles.label}>{label}</Text>
       <Controller
         control={control}
         rules={{
@@ -31,7 +30,7 @@ export const Question: React.FC<QuestionProps> = ({ question }) => {
             value={value}
           />
         )}
-        name={question.name}
+        name={name}
       />
     </View>
   );
