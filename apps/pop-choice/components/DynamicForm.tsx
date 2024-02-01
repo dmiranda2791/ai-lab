@@ -1,12 +1,13 @@
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "./Button";
 import { Input, InputOption } from "../models/input";
 import { ControlledTextInput } from "./ControlledTextInput";
 import { ControlledMultiSelectInput } from "./ControlledMultiSelectInput";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHeaderTitle } from "./HeaderContext";
 import { router } from "expo-router";
+import { OutputDataContext } from "./OutputDataContext";
 
 type DynamicFormProps = {
   inputs: Input[];
@@ -29,6 +30,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   numberOfPeople,
 }) => {
   const { setHeaderTitle } = useHeaderTitle();
+  const { setOutputData } = useContext(OutputDataContext);
 
   const defaultValues = { favoriteMovie: "", mood: [], famousPerson: "" };
   const formMethods = useForm<FormData>({
@@ -58,8 +60,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
       setCurrentParticipantIndex(currentParticipantIndex + 1);
       append(defaultValues);
     } else {
-      setHeaderTitle();
-
+      setIsLoading(true);
       const response = await fetch("/suggestion", {
         method: "POST",
         headers: {
@@ -69,14 +70,20 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
       });
       const json = await response.json();
 
-      router.push({ pathname: "/output", params: json });
+      setOutputData(json);
+      setIsLoading(false);
+      setHeaderTitle();
+
+      router.push({ pathname: "/output" });
     }
   };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <FormProvider {...formMethods}>
       <View style={styles.container}>
-        {fields.map((participant, index) => {
+        {fields.map((_, index) => {
           if (index !== currentParticipantIndex) {
             return null;
           }
@@ -103,11 +110,15 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
             }
           });
         })}
-        <Button
-          style={styles.button}
-          text={fields.length < numberOfPeople ? "Next Person" : "Get Movie"}
-          onPress={handleSubmit(onSubmit)}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#51E08A" />
+        ) : (
+          <Button
+            style={styles.button}
+            text={fields.length < numberOfPeople ? "Next Person" : "Get Movie"}
+            onPress={handleSubmit(onSubmit)}
+          />
+        )}
       </View>
     </FormProvider>
   );

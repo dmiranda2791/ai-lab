@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { StyledScreen } from "../components/StyledScreen";
 import { Header } from "../components/Header";
 import { HeaderProvider } from "../components/HeaderContext";
+import { OutputDataProvider } from "../components/OutputDataContext";
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -15,10 +16,12 @@ export default function RootLayout() {
   }
   return (
     <HeaderProvider>
-      <StyledScreen>
-        <Header />
-        <Slot />
-      </StyledScreen>
+      <OutputDataProvider>
+        <StyledScreen>
+          <Header />
+          <Slot />
+        </StyledScreen>
+      </OutputDataProvider>
     </HeaderProvider>
   );
 }

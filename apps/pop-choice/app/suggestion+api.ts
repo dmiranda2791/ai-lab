@@ -40,6 +40,8 @@ const movies = `
   Chronicling the journey of a writer's renowned fictional tale, 'Asteroid City' unveils the transformation of a mourning father. He takes his technology-fixated family to the quaint Asteroid City for a junior stargazing competition. But there, his perspective on life is irrevocably changed. Wes Anderson directed the comedic drama Asteroid City, starring Jason Schwartzman, Scarlett Johansson, and Tom Hanks.
 `;
 
+interface Output { title: string; year: string; message: string, posterUrl?: string }
+
 class MovieExpert {
   constructor(private openai: OpenAI, private supabase: SupabaseClient) { }
 
@@ -47,13 +49,14 @@ class MovieExpert {
 
     const embedding = await this.generateInputEmbedding(JSON.stringify(input));
     const matches = await this.getEmbeddingMatches(embedding);
-    const chatResponse = await this.getChatCompletion(JSON.stringify(input), matches);
+    const chatResponses = await this.getChatCompletion(JSON.stringify(input), matches);
 
+    const hydratedOutput = await Promise.all(chatResponses.map(movie => this.hydrateOutputData(movie)));
 
-    return chatResponse;
-
+    return hydratedOutput;
   }
-  async generateInputEmbedding(input: string): Promise<number[]> {
+
+  private async generateInputEmbedding(input: string): Promise<number[]> {
     const embeddingResponse = await this.openai.embeddings.create({
       model: "text-embedding-ada-002",
       input
@@ -61,7 +64,7 @@ class MovieExpert {
     return embeddingResponse.data[0].embedding;
   }
 
-  async getEmbeddingMatches(embedding: number[]): Promise<string> {
+  private async getEmbeddingMatches(embedding: number[]): Promise<string> {
     const { data } = await this.supabase.rpc('match_movies', {
       query_embedding: embedding,
       match_threshold: 0.50,
@@ -74,13 +77,12 @@ class MovieExpert {
   }
 
 
-  async getChatCompletion(context: string, query: string): Promise<{ title: string; year: string; message: string }> {
-    console.log({ context, query })
+  private async getChatCompletion(context: string, query: string): Promise<Output[]> {
     const response = await this.openai.chat.completions.create({
       model: 'gpt-4',
       messages: [{
         role: 'system',
-        content: `You are an enthusiastic movie expert who loves recommending movies to people. You will be given two pieces of information - some context about a group of people and their movie preferences and some movies that fit those preferences. Your main job is to formulate a short message using the provided context. If cannot find the answer in the context, say, "Sorry, I couldn't find the answer in the context." and respond based on you knwoledge. Respond as if you are talking to a group of friends. Output a JSON object with structure { title, year, message }.`
+        content: `You are an enthusiastic movie expert who loves recommending movies to people. You will be given two pieces of information - some context about a group of people and their movie preferences and some movies that fit those preferences. Your main job is to formulate a short message using the provided context. If cannot find the answer in the context, say, "Sorry, I couldn't find the answer in the context." and respond based on you knwoledge. Respond as if you are talking to a group of friends. Output an array of JSON objects with structure { title, year, message } for each of the recommended movies.`
       }, {
         role: 'user',
         content: `Context: ${context} Question: ${query}`
@@ -90,8 +92,25 @@ class MovieExpert {
     });
 
     const messageContent = response.choices[0].message.content;
-    console.log({ messageContent })
     return JSON.parse(messageContent)
+  }
+
+  private async hydrateOutputData(movie: Output) {
+    const posterPathBaseUrl = 'https://image.tmdb.org/t/p/original'
+    const url = `https://api.themoviedb.org/3/search/movie?query=${movie.title}&language=en-US`;
+    const options = {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${config.tmdb.apiKey}`
+      }
+    };
+
+    const response = await fetch(url, options)
+    const data = await response.json()
+    const posterUrl = `${posterPathBaseUrl}${data.results[0].poster_path}`;
+
+    return { ...movie, posterUrl }
   }
 }
 
@@ -100,6 +119,9 @@ const config = {
     url: process.env.SUPABASE_URL,
     privateKey: process.env.SUPABASE_API_KEY
   },
+  tmdb: {
+    apiKey: process.env.TMDB_API_KEY
+  }
 }
 
 interface InputData {

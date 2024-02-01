@@ -1,6 +1,7 @@
 import { DynamicForm } from "../components/DynamicForm";
 import { useLocalSearchParams } from "expo-router";
 import { Input } from "../models/input";
+import { OutputDataProvider } from "../components/OutputDataContext";
 
 const inputs: Input[] = [
   {
