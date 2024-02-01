@@ -30,7 +30,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
-            placeholderTextColor={"#000C36"}
+            placeholderTextColor={"#FFFFFF"}
           />
         )}
         name={name}
